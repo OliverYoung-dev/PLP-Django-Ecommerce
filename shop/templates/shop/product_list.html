@@ -1,0 +1,57 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Products - My E-commerce Store{% endblock %}
+
+{% block content %}
+<style>
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-gap: 20px;
+    }
+
+    .product-item { border: 1px solid #ddd; padding: 10px; text-align: center; }
+
+    .product-item img { max-width: 100%; max-height: 150px; margin-bottom: 10px; }
+
+    .product-info { margin: 5px 0; }
+
+    .no-products { color: red; grid-column: 1 / -1; text-align: center; }
+
+    .add-to-cart {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .add-to-cart:hover {
+        background-color: orange;
+    }
+</style>
+<h2>Our Products</h2>
+<div class="product-grid">
+    {% for product in products %}
+        <div class="product-item">
+            <a href="{% url 'product_detail' product.id product.slug %}">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% endif %}
+                <div class="product-info">
+                    <h3>{{ product.name }}</h3>
+                    <p>{{ product.price }}</p>
+                    <p>{{ product.description }}</p>
+                </div>
+            </a>
+            <form method="post" action="">
+                {% csrf_token %}
+                <button class="add-to-cart" type="submit">Add to Cart</button>
+            </form>
+        </div>
+    {% empty %}
+        <div class="no-products">No products available.</div>
+    {% endfor %}
+</div>
+<!-- <h2>New Products</h2> -->
+{% endblock %}
